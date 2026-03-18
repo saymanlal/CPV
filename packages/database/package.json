@@ -1,0 +1,27 @@
+{
+  "name": "@cpv/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/seed.ts --format esm --dts",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate --schema ../../prisma/schema.prisma",
+    "db:push": "prisma db push --schema ../../prisma/schema.prisma",
+    "db:seed": "tsx --env-file=../../.env src/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.16.2",
+    "bcrypt": "6.0.0"
+  },
+  "devDependencies": {
+    "prisma": "6.16.2",
+    "tsup": "8.5.0",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2"
+  }
+}
