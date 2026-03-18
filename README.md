@@ -1,15 +1,24 @@
 # CPV
 
-Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository currently delivers **Phase 0: Project Foundation**.
+Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository now delivers **Phase 1: Auth + User System** on top of the original Phase 0 foundation.
 
-## Included in Phase 0
+## Included in Phase 1
 
-- **pnpm workspace + Turborepo** monorepo orchestration.
-- **`apps/web`** powered by Next.js, TypeScript, TailwindCSS, and Framer Motion.
-- **`apps/server`** powered by Fastify, Socket.IO, Pino-based logging, and typed environment validation.
-- **Prisma + PostgreSQL** baseline data layer with a `User` model for future auth and rating work.
+- **Monorepo foundation** with pnpm workspaces and Turborepo orchestration.
+- **`apps/web`** built with Next.js, TypeScript, TailwindCSS, and Framer Motion.
+- **`apps/server`** built with Fastify, Socket.IO, typed environment validation, and structured logging.
+- **JWT authentication** with register, login, and protected `me` endpoints.
+- **Password hashing with bcrypt** before persistence.
+- **Prisma + PostgreSQL** user model including rating, role, and hashed password storage.
+- **Shared contracts** for auth request/response validation across frontend and backend.
 - **Docker Compose** services for PostgreSQL and Redis to support local development.
-- **Health check endpoint** at `GET /api/health` validating database reachability.
+
+## API routes available now
+
+- `GET /api/health`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me` (requires `Authorization: Bearer <token>`)
 
 ## Getting started
 
@@ -44,9 +53,17 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
    pnpm dev
    ```
 
+6. Run Phase 1 auth tests:
+
+   ```bash
+   pnpm --filter @cpv/server test
+   ```
+
 ## Local endpoints
 
 - Web: `http://localhost:3000`
+- Auth UI: `http://localhost:3000/auth`
+- Protected profile: `http://localhost:3000/profile`
 - API: `http://localhost:4000`
 - Health: `http://localhost:4000/api/health`
 
@@ -54,12 +71,13 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
 
 ```text
 apps/
-  server/   Fastify API + realtime gateway
-  web/      Next.js frontend
+  server/   Fastify API + realtime gateway + auth routes
+  web/      Next.js frontend + auth/profile UI
 packages/
-  config/   Shared environment validation
-  database/ Prisma client wrapper
-  logger/   Shared Pino logger factory
+  config/    Shared environment validation
+  contracts/ Shared auth schemas and types
+  database/  Prisma client wrapper
+  logger/    Shared Pino logger factory
 prisma/
   schema.prisma
 ```

@@ -11,3 +11,5 @@ apps/server/.env
 apps/web/.env.local
 prisma/migrations
 packages/database/generated
+
+*.tsbuildinfo

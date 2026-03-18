@@ -1,44 +1,17 @@
-import Fastify from 'fastify';
-import cors from '@fastify/cors';
-import { serverEnv } from '@cpv/config/server';
-import { createLogger } from '@cpv/logger';
-import { healthRoutes } from './routes/health.js';
-import { registerSocketServer } from './plugins/socket.js';
-
-declare module 'fastify' {
-  interface FastifyInstance {
-    config: typeof serverEnv;
-  }
-}
+import { buildServer } from './app.js';
 
 const bootstrap = async () => {
-  const logger = createLogger('server', serverEnv.LOG_LEVEL);
-
-  const app = Fastify({
-    loggerInstance: logger,
-    disableRequestLogging: false,
-  });
-
-  app.decorate('config', serverEnv);
-
-  await app.register(cors, {
-    origin: serverEnv.CORS_ORIGIN,
-    credentials: true,
-  });
-
-  await app.register(healthRoutes, { prefix: '/api' });
-
-  registerSocketServer(app);
+  const app = await buildServer();
 
   try {
     await app.listen({
-      host: serverEnv.HOST,
-      port: serverEnv.PORT,
+      host: app.config.HOST,
+      port: app.config.PORT,
     });
 
     app.log.info(
       {
-        address: `http://${serverEnv.HOST}:${serverEnv.PORT}`,
+        address: `http://${app.config.HOST}:${app.config.PORT}`,
       },
       'CPV server is ready',
     );
