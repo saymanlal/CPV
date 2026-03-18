@@ -11,12 +11,17 @@ export default function ProfilePage() {
           </span>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">Your CPV identity</h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
-            This page confirms that JWT validation is working before later phases add problems, battles, and rating updates.
+            This page confirms that JWT validation is working before battles begin, and it links naturally into the new problem engine phase.
           </p>
         </div>
-        <Link href="/auth" className="rounded-2xl border border-white/10 px-4 py-3 text-sm font-medium text-slate-200 transition hover:border-cyan-300/40 hover:text-white">
-          Switch account
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/problems" className="rounded-2xl bg-cyan-400 px-4 py-3 text-sm font-medium text-slate-950 transition hover:bg-cyan-300">
+            Browse problems
+          </Link>
+          <Link href="/auth" className="rounded-2xl border border-white/10 px-4 py-3 text-sm font-medium text-slate-200 transition hover:border-cyan-300/40 hover:text-white">
+            Switch account
+          </Link>
+        </div>
       </div>
 
       <ProfilePanel />

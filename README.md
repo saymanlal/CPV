@@ -1,24 +1,26 @@
 # CPV
 
-Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository now delivers **Phase 1: Auth + User System** on top of the original Phase 0 foundation.
+Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository now delivers **Phase 2: Problem Engine** on top of the earlier foundation and auth system.
 
-## Included in Phase 1
+## Included in Phase 2
 
 - **Monorepo foundation** with pnpm workspaces and Turborepo orchestration.
-- **`apps/web`** built with Next.js, TypeScript, TailwindCSS, and Framer Motion.
-- **`apps/server`** built with Fastify, Socket.IO, typed environment validation, and structured logging.
-- **JWT authentication** with register, login, and protected `me` endpoints.
-- **Password hashing with bcrypt** before persistence.
-- **Prisma + PostgreSQL** user model including rating, role, and hashed password storage.
-- **Shared contracts** for auth request/response validation across frontend and backend.
-- **Docker Compose** services for PostgreSQL and Redis to support local development.
+- **JWT auth + user system** with register, login, and protected profile access.
+- **Problem engine** with a typed Prisma schema for problems and test cases.
+- **Admin-only problem creation API** to protect the curated problem pool.
+- **Problem browsing + viewer pages** in the Next.js frontend.
+- **Monaco editor workspace** with starter code for C++, Python, and Java.
+- **Seed script** for a local admin user and starter problems.
 
 ## API routes available now
 
 - `GET /api/health`
 - `POST /api/auth/register`
 - `POST /api/auth/login`
-- `GET /api/auth/me` (requires `Authorization: Bearer <token>`)
+- `GET /api/auth/me`
+- `GET /api/problems`
+- `GET /api/problems/:slug`
+- `POST /api/problems` (requires admin token)
 
 ## Getting started
 
@@ -47,23 +49,34 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
    pnpm db:push
    ```
 
-5. Run the platform locally:
+5. Seed a local admin user and starter problems:
+
+   ```bash
+   pnpm db:seed
+   ```
+
+6. Run the platform locally:
 
    ```bash
    pnpm dev
    ```
 
-6. Run Phase 1 auth tests:
+7. Run server tests:
 
    ```bash
    pnpm --filter @cpv/server test
    ```
 
+## Seeded admin credentials
+
+- Email: `admin@cpv.dev`
+- Password: `Admin12345`
+
 ## Local endpoints
 
 - Web: `http://localhost:3000`
 - Auth UI: `http://localhost:3000/auth`
-- Protected profile: `http://localhost:3000/profile`
+- Problems: `http://localhost:3000/problems`
 - API: `http://localhost:4000`
 - Health: `http://localhost:4000/api/health`
 
@@ -71,12 +84,12 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
 
 ```text
 apps/
-  server/   Fastify API + realtime gateway + auth routes
-  web/      Next.js frontend + auth/profile UI
+  server/   Fastify API + realtime gateway + auth + problem routes
+  web/      Next.js frontend + auth/profile/problem UI
 packages/
   config/    Shared environment validation
-  contracts/ Shared auth schemas and types
-  database/  Prisma client wrapper
+  contracts/ Shared auth/problem schemas and types
+  database/  Prisma client wrapper + seed script
   logger/    Shared Pino logger factory
 prisma/
   schema.prisma

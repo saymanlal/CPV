@@ -13,6 +13,7 @@
   "dependencies": {
     "@cpv/config": "workspace:*",
     "@cpv/contracts": "workspace:*",
+    "@monaco-editor/react": "4.7.0",
     "framer-motion": "12.23.12",
     "next": "15.5.2",
     "react": "19.1.1",

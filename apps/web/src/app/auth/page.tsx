@@ -13,7 +13,7 @@ export default function AuthPage() {
         </h1>
         <p className="mt-6 text-lg leading-8 text-slate-300">
           Phase 1 focuses on a stable identity system: clean forms, typed validation, password hashing, JWT sessions, and
-          a protected profile route you can verify immediately.
+          a protected profile route plus a browsable problem library and editor workspace.
         </p>
         <div className="mt-8 space-y-4 text-sm leading-7 text-slate-400">
           <p>• Every new user starts at a rating of 1200.</p>

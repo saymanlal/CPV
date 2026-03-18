@@ -58,7 +58,7 @@ export const ProfilePanel = () => {
     >
       <Card
         title={user.username}
-        body="Your identity layer is ready for future matchmaking, ratings, battles, and progression systems."
+        body="Your identity layer is ready for the problem engine, future matchmaking, ratings, battles, and progression systems."
         footer={
           <button
             type="button"
@@ -84,7 +84,7 @@ export const ProfilePanel = () => {
         <ul className="mt-6 space-y-3 text-sm leading-6 text-slate-300">
           <li>• JWT-authenticated requests for protected APIs.</li>
           <li>• Server-side password hashing and duplicate-account protection.</li>
-          <li>• Persistent user records ready for ratings, submissions, and match history.</li>
+          <li>• Persistent user records ready for problems, ratings, submissions, and match history.</li>
         </ul>
       </Card>
     </motion.section>

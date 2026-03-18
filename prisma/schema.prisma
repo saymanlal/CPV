@@ -12,13 +12,50 @@ enum UserRole {
   ADMIN
 }
 
+enum ProblemDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  username     String   @unique
-  passwordHash String
-  rating       Int      @default(1200)
-  role         UserRole @default(USER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String    @id @default(cuid())
+  email           String    @unique
+  username        String    @unique
+  passwordHash    String
+  rating          Int       @default(1200)
+  role            UserRole  @default(USER)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdProblems Problem[] @relation("ProblemAuthor")
+}
+
+model Problem {
+  id          String             @id @default(cuid())
+  title       String
+  slug        String             @unique
+  description String             @db.Text
+  difficulty  ProblemDifficulty
+  tags        String[]
+  starterCode Json
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  authorId    String?
+  author      User?              @relation("ProblemAuthor", fields: [authorId], references: [id])
+  testCases   TestCase[]
+}
+
+model TestCase {
+  id             String   @id @default(cuid())
+  problemId      String
+  orderIndex     Int
+  input          String   @db.Text
+  expectedOutput String   @db.Text
+  explanation    String?  @db.Text
+  isSample       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  problem        Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([problemId, orderIndex])
 }

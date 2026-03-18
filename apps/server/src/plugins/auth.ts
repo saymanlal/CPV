@@ -29,4 +29,10 @@ export const authPlugin: FastifyPluginAsync = async (app) => {
       return reply.code(401).send({ message: 'Authentication required.' });
     }
   });
+
+  app.decorate('requireAdmin', async (request, reply) => {
+    if (request.user.role !== 'ADMIN') {
+      return reply.code(403).send({ message: 'Admin access is required.' });
+    }
+  });
 };
