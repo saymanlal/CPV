@@ -2,11 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
+import type { EditorLanguage, ProblemDetail } from '@cpv/contracts/problem';
+import type { ExecuteSubmissionResponse } from '@cpv/contracts/execution';
+import { executeSubmission } from '../../lib/submissions';
+import { SubmissionResultPanel } from '../submissions/submission-result-panel';
 
 const Editor = dynamic(() => import('@monaco-editor/react'), {
   ssr: false,
 });
-import type { EditorLanguage, ProblemDetail } from '@cpv/contracts/problem';
 
 const languageOptions: Array<{ label: string; value: EditorLanguage; monacoLanguage: string }> = [
   { label: 'C++', value: 'cpp', monacoLanguage: 'cpp' },
@@ -23,6 +26,9 @@ const difficultyStyles: Record<ProblemDetail['difficulty'], string> = {
 export const ProblemWorkspace = ({ problem }: { problem: ProblemDetail }) => {
   const [language, setLanguage] = useState<EditorLanguage>('python');
   const [drafts, setDrafts] = useState(problem.starterCode);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [result, setResult] = useState<ExecuteSubmissionResponse | null>(null);
+  const [executionError, setExecutionError] = useState<string | null>(null);
 
   const currentLanguage = useMemo(
     () => languageOptions.find((option) => option.value === language) ?? languageOptions[1],
@@ -69,7 +75,7 @@ export const ProblemWorkspace = ({ problem }: { problem: ProblemDetail }) => {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <h2 className="text-lg font-semibold text-white">Code editor</h2>
-            <p className="mt-1 text-sm text-slate-400">Phase 2 editor foundation with Monaco for C++, Python, and Java.</p>
+            <p className="mt-1 text-sm text-slate-400">Submit code through the Phase 3 execution engine with Docker-isolated runs.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {languageOptions.map((option) => (
@@ -107,6 +113,41 @@ export const ProblemWorkspace = ({ problem }: { problem: ProblemDetail }) => {
             }}
           />
         </div>
+
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-slate-400">Runs are authenticated and executed against the full test suite, not just the sample cases.</p>
+          <button
+            type="button"
+            disabled={isExecuting}
+            onClick={async () => {
+              setIsExecuting(true);
+              setExecutionError(null);
+
+              try {
+                const nextResult = await executeSubmission({
+                  problemSlug: problem.slug,
+                  language,
+                  sourceCode: drafts[language],
+                });
+
+                setResult(nextResult);
+              } catch (error) {
+                setExecutionError(error instanceof Error ? error.message : 'Unable to execute this submission.');
+              } finally {
+                setIsExecuting(false);
+              }
+            }}
+            className="rounded-2xl bg-cyan-400 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isExecuting ? 'Running…' : 'Run submission'}
+          </button>
+        </div>
+
+        {executionError ? (
+          <p className="mt-5 rounded-2xl border border-rose-400/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">{executionError}</p>
+        ) : null}
+
+        {result ? <SubmissionResultPanel result={result} /> : null}
       </article>
     </section>
   );

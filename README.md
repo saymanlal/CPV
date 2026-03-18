@@ -1,16 +1,16 @@
 # CPV
 
-Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository now delivers **Phase 2: Problem Engine** on top of the earlier foundation and auth system.
+Competitive Programming Versus (CPV) is being built in strict, non-breaking phases. This repository now delivers **Phase 3: Code Execution Engine** on top of the earlier foundation, auth system, and problem engine.
 
-## Included in Phase 2
+## Included in Phase 3
 
 - **Monorepo foundation** with pnpm workspaces and Turborepo orchestration.
 - **JWT auth + user system** with register, login, and protected profile access.
-- **Problem engine** with a typed Prisma schema for problems and test cases.
-- **Admin-only problem creation API** to protect the curated problem pool.
-- **Problem browsing + viewer pages** in the Next.js frontend.
-- **Monaco editor workspace** with starter code for C++, Python, and Java.
-- **Seed script** for a local admin user and starter problems.
+- **Problem engine** with typed Prisma schemas, browsing pages, and admin-only creation.
+- **Docker-based code execution** for C++, Python, and Java.
+- **Execution limits** for time and memory with network-disabled containers.
+- **Submission persistence** for execution verdicts, runtime, and memory usage.
+- **Frontend execution UI** wired into the Monaco problem workspace.
 
 ## API routes available now
 
@@ -21,6 +21,7 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
 - `GET /api/problems`
 - `GET /api/problems/:slug`
 - `POST /api/problems` (requires admin token)
+- `POST /api/submissions/execute` (requires auth token)
 
 ## Getting started
 
@@ -84,11 +85,11 @@ Competitive Programming Versus (CPV) is being built in strict, non-breaking phas
 
 ```text
 apps/
-  server/   Fastify API + realtime gateway + auth + problem routes
-  web/      Next.js frontend + auth/profile/problem UI
+  server/   Fastify API + auth + problems + execution routes
+  web/      Next.js frontend + auth/profile/problem/execution UI
 packages/
   config/    Shared environment validation
-  contracts/ Shared auth/problem schemas and types
+  contracts/ Shared auth/problem/execution schemas and types
   database/  Prisma client wrapper + seed script
   logger/    Shared Pino logger factory
 prisma/

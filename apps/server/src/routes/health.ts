@@ -10,7 +10,7 @@ export const healthRoutes: FastifyPluginAsync = async (app) => {
     return {
       status: 'ok',
       service: 'cpv-server',
-      phase: 'phase-2-problem-engine',
+      phase: 'phase-3-code-execution-engine',
       timestamp: new Date().toISOString(),
       uptimeSeconds: Math.round(process.uptime()),
       dependencies: {
@@ -22,6 +22,10 @@ export const healthRoutes: FastifyPluginAsync = async (app) => {
       },
       problems: {
         total: problemCount,
+      },
+      execution: {
+        timeLimitMs: app.config.EXECUTION_TIME_LIMIT_MS,
+        memoryLimitMb: app.config.EXECUTION_MEMORY_LIMIT_MB,
       },
       responseTimeMs: Date.now() - startedAt,
     };

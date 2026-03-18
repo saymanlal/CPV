@@ -18,16 +18,27 @@ enum ProblemDifficulty {
   HARD
 }
 
+enum SubmissionVerdict {
+  ACCEPTED
+  WRONG_ANSWER
+  COMPILATION_ERROR
+  RUNTIME_ERROR
+  TIME_LIMIT_EXCEEDED
+  MEMORY_LIMIT_EXCEEDED
+  SYSTEM_ERROR
+}
+
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  username        String    @unique
+  id              String       @id @default(cuid())
+  email           String       @unique
+  username        String       @unique
   passwordHash    String
-  rating          Int       @default(1200)
-  role            UserRole  @default(USER)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  createdProblems Problem[] @relation("ProblemAuthor")
+  rating          Int          @default(1200)
+  role            UserRole     @default(USER)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  createdProblems Problem[]    @relation("ProblemAuthor")
+  submissions     Submission[]
 }
 
 model Problem {
@@ -43,6 +54,7 @@ model Problem {
   authorId    String?
   author      User?              @relation("ProblemAuthor", fields: [authorId], references: [id])
   testCases   TestCase[]
+  submissions Submission[]
 }
 
 model TestCase {
@@ -58,4 +70,21 @@ model TestCase {
   problem        Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([problemId, orderIndex])
+}
+
+model Submission {
+  id         String            @id @default(cuid())
+  userId     String
+  problemId  String
+  language   String
+  sourceCode String            @db.Text
+  verdict    SubmissionVerdict
+  runtimeMs  Int
+  memoryKb   Int
+  createdAt  DateTime          @default(now())
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem    Problem           @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([problemId, createdAt])
 }
