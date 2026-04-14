@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: cpv
+      POSTGRES_PASSWORD: cpv
+      POSTGRES_DB: cpv
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
